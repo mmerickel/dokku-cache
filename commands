@@ -8,7 +8,7 @@ case "$1" in
     APP="$2"; IMAGE="dokku/$APP"; CACHE_DIR="$DOKKU_ROOT/$APP/cache"
 
     [[ ! -d $CACHE_DIR ]] && echo "App $2 does not have a cache folder" && exit 0
-    docker run -v $CACHE_DIR:/cache $IMAGE find /cache -mindepth 1 -maxdepth 1 -print0 | xargs -0 rm -rf
+    docker run -v $CACHE_DIR:/cache $IMAGE /bin/sh -c "find /cache -mindepth 1 -maxdepth 1 -print0 | xargs -0 rm -rf"
     echo "Clearing cache for $APP... done"
     ;;
 
