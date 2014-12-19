@@ -5,9 +5,11 @@ case "$1" in
   cache:clear)
     [[ -z $2 ]] && echo "Please specify an app to run the command on" && exit 1
     [[ ! -d "$DOKKU_ROOT/$2" ]] && echo "App $2 does not exist" && exit 1
-    APP="$2"
+    APP="$2"; IMAGE="dokku/$APP"; CACHE_DIR="$DOKKU_ROOT/$APP/cache"
 
-    rm -rf "$DOKKU_ROOT/$2/cache"
+    if [[ -d $CACHE_DIR ]]; then
+        docker run -v $CACHE_DIR:/cache $IMAGE find /cache -mindepth 1 -maxdepth 1 -print0 | xargs -0 rm -rf
+    fi
     echo "Clearing cache for $APP... done"
     ;;
 
