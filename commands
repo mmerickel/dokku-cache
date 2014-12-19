@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
+
+case "$1" in
+  cache:clear)
+    [[ -z $2 ]] && echo "Please specify an app to run the command on" && exit 1
+    [[ ! -d "$DOKKU_ROOT/$2" ]] && echo "App $2 does not exist" && exit 1
+    APP="$2"
+
+    rm -rf "$DOKKU_ROOT/$2/cache"
+    echo "Clearing cache for $APP... done"
+    ;;
+
+  help | apps:help)
+    cat && cat<<EOF
+    cache:clear <app>                               Clear the cache for an app
+EOF
+    ;;
+
+  *)
+    exit $DOKKU_NOT_IMPLEMENTED_EXIT
+    ;;
+
+esac
